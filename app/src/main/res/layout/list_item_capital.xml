@@ -2,14 +2,16 @@
 
 <layout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <data>
     <variable
       name="capital"
       type="com.t0p47.capitals.model.Capital"/>
 
-    <variable name="click" type="com.t0p47.denimtestlistview.adapter.CapitalClickHandler"/>
+    <variable name="click"
+              type="com.t0p47.denimtestlistview.adapter.CapitalClickHandler"/>
   </data>
 
 <RelativeLayout 

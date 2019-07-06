@@ -25,10 +25,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        val viewModel = ViewModelProviders.of(this).get(MyViewModel::class.java)
+		val viewModel = ViewModelProviders.of(this).get(MyViewModel::class.java)
+        binding.vm = viewModel
+		binding.executePendingBindings()
 
-        viewModel.loadRepositories()
-        viewModel.repositories.observe(this,
+		viewModel.loadRepositories()
+		viewModel.repositories.observe(this,
         	Observer<ArrayList<Capital>>{it?.let{
         		Log.d("LOG_TAG", "MainActivity: Get data from internet")
         		capitalsList = it

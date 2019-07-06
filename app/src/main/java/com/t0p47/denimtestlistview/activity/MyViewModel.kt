@@ -3,6 +3,7 @@ package com.t0p47.denimtestlistview.activity
 import android.app.Application
 import android.net.Uri
 import android.util.Log
+import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.t0p47.capitals.model.Capital
@@ -19,6 +20,8 @@ class MyViewModel: AndroidViewModel {
 	private val capitalsService by lazy{
 		ApiInterface.create(getApplication())
 	}
+
+	val isLoading = ObservableField(false)
 
     lateinit var disposable: Disposable
     var repositories = MutableLiveData<ArrayList<Capital>>()
@@ -45,36 +48,8 @@ class MyViewModel: AndroidViewModel {
 		})*/
 
 		disposable = capitalsService.getCapitals()
-            /*.map(Function1<CapitalResponse, ArrayList<Capital>{
-                override fun call(capitalResponse: CapitalResponse): ArrayList<Capital>(){
-                    return capitalResponse.capitals
-                }
-            })*/
             .map {capResponse -> capResponse.capitals}
-            /*.flatMap(Func1<ArrayList<Capital>>, Observable<Capital>{
-
-                override fun call(capitals: ArrayList<Capital>): Observable<Capital>(){
-                    return Observable.from(capitals)
-                }
-
-            })*/
             .flatMap {capitals -> Observable.fromIterable(capitals)}
-            /*.map(Func1<Capital, Capital>(){
-
-                override fun call(capital: Capital): Capital{
-                    capital.images.forEach{
-                        val imgUri = Uri.parse(it)
-                        if(imgUri.host == "en.wikipedia"){
-                            val doc = Jsoup.connect(it).get
-                            val fileName = it.split("File:")[1]
-                            val imgs = doc.select("img[src$=${fileName}]").first()
-                            it = imgs.attr("src")
-                        }
-                    }
-                    return capital
-                }
-
-            })*/
             .map {capital ->
                 fun changeImgLink(capital: Capital): Capital{
                     capital.images?.forEachIndexed { id, value ->
@@ -91,11 +66,9 @@ class MyViewModel: AndroidViewModel {
                 }
                 changeImgLink(capital)
             }
-            /*.collect(ArrayList(), (container, value) -> {
-                Log.d("LOG_TAG", "Adding $value to container")
-                container.add(value)    
-            })*/
             .collect({ArrayList<Capital>()}, {container, value-> container.add(value) })
+            .doOnSubscribe{ _ -> isLoading.set(true)}
+            .doAfterTerminate{ isLoading.set(false)}
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

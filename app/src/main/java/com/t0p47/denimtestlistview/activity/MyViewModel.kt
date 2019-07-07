@@ -1,6 +1,7 @@
 package com.t0p47.denimtestlistview.activity
 
 import android.app.Application
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.databinding.ObservableField
@@ -12,7 +13,13 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 class MyViewModel: AndroidViewModel {
@@ -20,6 +27,9 @@ class MyViewModel: AndroidViewModel {
 	private val capitalsService by lazy{
 		ApiInterface.create(getApplication())
 	}
+
+    private val viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
 	val isLoading = ObservableField(false)
 
@@ -51,7 +61,7 @@ class MyViewModel: AndroidViewModel {
             .map {capResponse -> capResponse.capitals}
             .flatMap {capitals -> Observable.fromIterable(capitals)}
             .map {capital ->
-                fun changeImgLink(capital: Capital): Capital{
+                /*fun changeImgLink(capital: Capital): Capital{
                     capital.images?.forEachIndexed { id, value ->
                         val imgUri = Uri.parse(value)
                         Log.d("LOG_TAG","Check image host: ${imgUri.host}")
@@ -63,7 +73,7 @@ class MyViewModel: AndroidViewModel {
                         }
                     }
                     return capital
-                }
+                }*/
                 changeImgLink(capital)
             }
             .collect({ArrayList<Capital>()}, {container, value-> container.add(value) })
@@ -78,8 +88,60 @@ class MyViewModel: AndroidViewModel {
             )
     }
 
+    fun changeImgLink(capital: Capital): Capital{
+        capital.images?.forEachIndexed { id, value ->
+            val imgUri = Uri.parse(value)
+            Log.d("LOG_TAG","Check image host: ${imgUri.host}")
+            if(imgUri.host == "en.wikipedia.org"){
+                Log.d("LOG_TAG", "MyViewModel: checkedUrl: $value")
+                val doc = Jsoup.connect(value.trim()).get()
+                val fileName = value.split("File:")[1]
+                val imgs = doc.select("img[src$=${fileName}]").first()
+                capital.images?.set(id, "https:${imgs.attr("src")}")
+            }
+        }
+        return capital
+    }
+
+
+
+
+    fun addNewCapital(data: Intent?): Capital{
+
+        var capital = Capital()
+        capital.capital = data?.getStringExtra("capital")
+        capital.country = data?.getStringExtra("country")
+        capital.description = data?.getStringExtra("description")
+        //val imgList = (data?.getStringExtra("images")?.split(",")) as ArrayList
+        val imgList = data?.getStringExtra("images")
+
+        //capital.images = (imgList?.split(",")) as ArrayList
+        if(imgList!!.contains(",")){
+            capital.images = (imgList?.split(",")) as ArrayList
+        }else{
+            capital.images = arrayListOf(imgList!!)
+        }
+
+        Log.d("LOG_TAG","MyViewModel: before coroutine: ${capital.images.toString()}")
+
+        uiScope.launch(Dispatchers.IO){
+            capital = changeImgLink(capital)
+        }
+
+        Log.d("LOG_TAG","MyViewModel: after coroutine: ${capital.images.toString()}")
+        //continuation.resume(capital)
+
+        return capital
+
+    }
+
+
+
+
+
     override fun onCleared(){
     	super.onCleared()
+        viewModelJob.cancel()
     	if(!disposable.isDisposed){
     		disposable.dispose()
     	}

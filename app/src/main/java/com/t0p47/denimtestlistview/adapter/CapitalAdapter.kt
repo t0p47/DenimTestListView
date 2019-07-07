@@ -10,8 +10,9 @@ import com.t0p47.capitals.model.Capital
 import com.t0p47.denimtestlistview.R
 import com.t0p47.denimtestlistview.databinding.ListItemCapitalBinding
 
-class CapitalAdapter(private val context: Context,
-					 private val capitalList: ArrayList<Capital>): BaseAdapter(){
+class CapitalAdapter(
+	context: Context,
+	private val capitalList: ArrayList<Capital>): BaseAdapter(){
 
 	private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 

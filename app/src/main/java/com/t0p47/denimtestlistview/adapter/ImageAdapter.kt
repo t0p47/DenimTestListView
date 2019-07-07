@@ -1,7 +1,6 @@
 package com.t0p47.denimtestlistview.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,18 +20,16 @@ class ImageAdapter(context: Context,
         val rowView = inflater.inflate(R.layout.image_item, parent, false)
         val binding:  ImageItemBinding? = DataBindingUtil.bind(rowView)
 
-        val image = imagesList[position].toString()
-        //Log.d("LOG_TAG","ImageAdapter: setImage: $image")
-        //binding?.image = image
+        val image = imagesList[position]
 
 
         Picasso.get().load(image).into(binding?.imgView, object: Callback {
             override fun onError(e: Exception?) {
-                Log.d("LOG_TAG", "ImageAdapter: onError: ${e?.message}")
+                //Log.d("LOG_TAG", "ImageAdapter: onError: ${e?.message}")
             }
 
             override fun onSuccess(){
-                Log.d("LOG_TAG", "ImageAdapter: onSuccess image")
+                //Log.d("LOG_TAG", "ImageAdapter: onSuccess image")
             }
         })
 

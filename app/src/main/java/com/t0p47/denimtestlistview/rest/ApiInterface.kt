@@ -1,8 +1,8 @@
-package com.t0p47.capitals.rest
+package com.t0p47.denimtestlistview.rest
 
 import android.content.Context
-import com.t0p47.capitals.model.CapitalResponse
-import com.t0p47.capitals.rest.NetworkIterceptor.ConnectivityInterceptor
+import com.t0p47.denimtestlistview.model.CapitalResponse
+import com.t0p47.denimtestlistview.rest.NetworkIterceptor.ConnectivityInterceptor
 import io.reactivex.Observable
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -18,8 +18,8 @@ interface ApiInterface {
 
     companion object Factory{
 
-        val BASE_URL = "https://gitlab.com/snippets/"
-        fun create(context: Context): ApiInterface{
+        private const val BASE_URL = "https://gitlab.com/snippets/"
+        fun create(context: Context): ApiInterface {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(provideOkHttpClient(context))
@@ -30,7 +30,7 @@ interface ApiInterface {
         }
 
         private fun provideOkHttpClient(context: Context): OkHttpClient{
-            var okHttpClientBuilder = OkHttpClient.Builder()
+            val okHttpClientBuilder = OkHttpClient.Builder()
             okHttpClientBuilder.connectTimeout(30, TimeUnit.SECONDS)
             okHttpClientBuilder.readTimeout(30, TimeUnit.SECONDS)
             okHttpClientBuilder.writeTimeout(30, TimeUnit.SECONDS)

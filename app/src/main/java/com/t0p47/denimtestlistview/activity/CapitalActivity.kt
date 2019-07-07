@@ -2,7 +2,6 @@ package com.t0p47.denimtestlistview.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.GridView
 import androidx.databinding.DataBindingUtil
@@ -25,13 +24,10 @@ class CapitalActivity : AppCompatActivity() {
 
         val imgList = intent.getStringExtra("images")
         if(imgList.isNotEmpty()){
-            val imgArray: ArrayList<String>
-            Log.d("LOG_TAG","CapitalActivity: imgList: $imgList")
-
-            if(imgList.contains(",")){
-                imgArray = (imgList?.split(",")) as ArrayList
+            val imgArray: ArrayList<String> = if(imgList.contains(",")){
+                (imgList?.split(",")) as ArrayList
             }else{
-                imgArray = arrayListOf(imgList!!)
+                arrayListOf(imgList!!)
             }
 
             binding.gridView.adapter = ImageAdapter(this, imgArray)

@@ -1,12 +1,13 @@
-package com.t0p47.capitals.model
+package com.t0p47.denimtestlistview.model
 
-import com.t0p47.capitals.rest.ApiInterface
+import android.content.Context
+import com.t0p47.denimtestlistview.rest.ApiInterface
 import io.reactivex.Observable
 
-class CapitalRepository(val apiInterface: ApiInterface){
+class CapitalRepository(val context: Context){
 
-	/*fun getRepositories(): Observable<CapitalResponse> {
-		return ApiInterface.create().getCapitals()
-	}*/
+	fun getRepositories(): Observable<CapitalResponse> {
+		return ApiInterface.create(context).getCapitals()
+	}
 
 }

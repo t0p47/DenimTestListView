@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.databinding.DataBindingUtil
-import com.t0p47.capitals.model.Capital
+import com.t0p47.denimtestlistview.model.Capital
 import com.t0p47.denimtestlistview.R
 import com.t0p47.denimtestlistview.databinding.ListItemCapitalBinding
 
@@ -20,7 +20,7 @@ class CapitalAdapter(
 		return capitalList.size
 	}
 
-	override fun getItem(position: Int): Capital{
+	override fun getItem(position: Int): Capital {
 		return capitalList[position]
 	}
 
@@ -35,20 +35,7 @@ class CapitalAdapter(
 
 		val capital: Capital? = capitalList[position]
 		binding?.capital = capital
-		/*binding?.click = object: CapitalClickHandler{
-			override fun onItemClicked(v: View){
-
-			}
-		}*/
-
-		//val rowView = inflater.inflate(R.layout.list_item_capital, parent, false)
-
-		//return rowView
 		return binding!!.root
 	}
 
-}
-
-interface CapitalClickHandler{
-	fun onItemClicked(v: View)
 }

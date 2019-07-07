@@ -1,4 +1,4 @@
-package com.t0p47.capitals.rest.NetworkIterceptor
+package com.t0p47.denimtestlistview.rest.NetworkIterceptor
 
 import java.io.IOException
 

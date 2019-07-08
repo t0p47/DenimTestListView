@@ -9,7 +9,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.t0p47.denimtestlistview.model.Capital
 import com.t0p47.denimtestlistview.model.CapitalRepository
-import com.t0p47.denimtestlistview.rest.ApiInterface
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -24,7 +23,7 @@ import org.jsoup.Jsoup
 class MyViewModel(application: Application) : AndroidViewModel(application) {
 
     private val viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    private val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
 	val isLoading = ObservableField(false)
 
@@ -33,23 +32,6 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
     var repositories = MutableLiveData<ArrayList<Capital>>()
 
     fun loadRepositories(){
-		Log.d("LOG_TAG","loadRepositories")
-    	/*disposable = capitalRepository.getRepositories().subscribeWith(object: DisposableObserver<CapitalResponse>(){
-
-    		override fun onError(e: Throwable){
-				Log.d("LOG_TAG","Error: ${e.stackTrace}")
-			}
-
-    		override fun onNext(data: CapitalResponse){
-				Log.d("LOG_TAG","onNext")
-    			repositories.value = data
-    		}
-
-    		override fun onComplete(){
-				Log.d("LOG_TAG","OnComplete")
-			}
-
-		})*/
 
         disposable = remoteData.getRepositories()
             .map {capResponse -> capResponse.capitals}
@@ -63,33 +45,14 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                //{ result -> repositories.value = result },
                 { result -> repositories.value = result },
                 { error -> Log.d("LOG_TAG","Error: ${error.message}") }
             )
-
-		/*disposable = capitalsService.getCapitals()
-            .map {capResponse -> capResponse.capitals}
-            .flatMap {capitals -> Observable.fromIterable(capitals)}
-            .map {capital ->
-                changeImgLink(capital)
-            }
-            .collect({ArrayList<Capital>()}, {container, value-> container.add(value) })
-            .doOnSubscribe{ _ -> isLoading.set(true)}
-            .doAfterTerminate{ isLoading.set(false)}
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                //{ result -> repositories.value = result },
-                { result -> repositories.value = result },
-                { error -> Log.d("LOG_TAG","Error: ${error.message}") }
-            )*/
     }
 
     private fun changeImgLink(capital: Capital): Capital {
         capital.images?.forEachIndexed { id, value ->
             val imgUri = Uri.parse(value)
-            Log.d("LOG_TAG","Check image host: ${imgUri.host}")
             if(imgUri.host == "en.wikipedia.org"){
                 val doc = Jsoup.connect(value.trim()).get()
                 val fileName = value.split("File:")[1]
@@ -106,32 +69,21 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
         capital.capital = data?.getStringExtra("capital")
         capital.country = data?.getStringExtra("country")
         capital.description = data?.getStringExtra("description")
-        //val imgList = (data?.getStringExtra("images")?.split(",")) as ArrayList
         val imgList = data?.getStringExtra("images")
 
-        //capital.images = (imgList?.split(",")) as ArrayList
         if(imgList!!.contains(",")){
             capital.images = (imgList.split(",")) as ArrayList
         }else{
             capital.images = arrayListOf(imgList)
         }
 
-        Log.d("LOG_TAG","MyViewModel: before coroutine: ${capital.images.toString()}")
-
-        uiScope.launch(Dispatchers.IO){
+        ioScope.launch(Dispatchers.IO){
             capital = changeImgLink(capital)
         }
-
-        Log.d("LOG_TAG","MyViewModel: after coroutine: ${capital.images.toString()}")
-        //continuation.resume(capital)
 
         return capital
 
     }
-
-
-
-
 
     override fun onCleared(){
     	super.onCleared()

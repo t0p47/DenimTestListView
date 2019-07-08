@@ -36,18 +36,6 @@ interface ApiInterface {
             okHttpClientBuilder.writeTimeout(30, TimeUnit.SECONDS)
             okHttpClientBuilder.addInterceptor(ConnectivityInterceptor(Observable.just(NetworkUtil.hasNetwork(context))))
 
-            /*okHttpClientBuilder.addInterceptor(object: NetworkConnectionInterceptor() {
-                override fun isInternetAvailable(): Boolean{
-                    return isInternetAvailable()
-                }
-
-                override fun onInternetUnavailable(){
-                    if(mInternetConnectionListener != null){
-                        mInternetConnectionListener.onInternetUnavailable()
-                    }
-                }
-            }) */
-
             return okHttpClientBuilder.build()
         }
 

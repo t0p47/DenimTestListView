@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:hint="Capital"
+            android:hint="@string/capital"
             android:ems="10"
             android:id="@+id/etCapital"/>
 
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:hint="Country"
+            android:hint="@string/country"
             android:ems="10"
             android:id="@+id/etCountry"/>
 
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:hint="Description"
+        android:hint="@string/description"
         android:ems="10"
         android:id="@+id/etDescription"/>
 
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:hint="Image links(comma separated)"
+        android:hint="@string/image_links"
         android:ems="10"
         android:id="@+id/etImgLinks"/>
 

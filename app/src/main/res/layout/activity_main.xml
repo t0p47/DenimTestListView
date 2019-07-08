@@ -16,7 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MainActivity">
+            tools:context=".activity.MainActivity">
 
         <ProgressBar
                 style="?android:attr/progressBarStyle"
@@ -36,7 +36,6 @@
                 android:layout_height="0dp"
                 android:visibility="@{vm.isLoading ? View.GONE : View.VISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:clickable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/btnAddCapital"
@@ -46,7 +45,7 @@
                 android:id="@+id/btnAddCapital"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="AddCapital"
+                android:text="@string/add_new_capital"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

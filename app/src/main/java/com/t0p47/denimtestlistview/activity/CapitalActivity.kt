@@ -12,7 +12,6 @@ import com.t0p47.denimtestlistview.databinding.ActivityCapitalBinding
 class CapitalActivity : AppCompatActivity() {
 
 	lateinit var binding: ActivityCapitalBinding
-    lateinit var adapter: ArrayAdapter<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

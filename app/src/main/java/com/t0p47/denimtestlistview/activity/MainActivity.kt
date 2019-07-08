@@ -1,18 +1,15 @@
-package com.t0p47.denimtestlistview
+package com.t0p47.denimtestlistview.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.widget.BaseAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.t0p47.denimtestlistview.R
 import com.t0p47.denimtestlistview.model.Capital
-import com.t0p47.denimtestlistview.activity.CapitalActivity
-import com.t0p47.denimtestlistview.activity.MyViewModel
-import com.t0p47.denimtestlistview.activity.NewCapitalActivity
 import com.t0p47.denimtestlistview.adapter.CapitalAdapter
 import com.t0p47.denimtestlistview.databinding.ActivityMainBinding
 
@@ -38,7 +35,6 @@ class MainActivity : AppCompatActivity() {
 		viewModel.repositories.observe(this,
         	Observer<ArrayList<Capital>>{ it ->
 				it?.let{
-        		Log.d("LOG_TAG", "MainActivity: get repository data")
         		capitalsList = it
         		binding.lvCapital.adapter = CapitalAdapter(this, capitalsList!!)
         	}})
@@ -67,7 +63,6 @@ class MainActivity : AppCompatActivity() {
 				val capital = viewModel.addNewCapital(data)
 
                 capitalsList!!.add(capital)
-                Log.d("LOG_TAG","MainActivity: updateListView with new capital")
                 (binding.lvCapital.adapter as BaseAdapter).notifyDataSetChanged()
     		}
     	}

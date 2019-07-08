@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.databinding.DataBindingUtil
-import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.t0p47.denimtestlistview.R
 import com.t0p47.denimtestlistview.databinding.ImageItemBinding
@@ -23,15 +22,7 @@ class ImageAdapter(context: Context,
         val image = imagesList[position]
 
 
-        Picasso.get().load(image).into(binding?.imgView, object: Callback {
-            override fun onError(e: Exception?) {
-                //Log.d("LOG_TAG", "ImageAdapter: onError: ${e?.message}")
-            }
-
-            override fun onSuccess(){
-                //Log.d("LOG_TAG", "ImageAdapter: onSuccess image")
-            }
-        })
+        Picasso.get().load(image).into(binding?.imgView)
 
         return binding!!.root
     }
